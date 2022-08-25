@@ -11,6 +11,7 @@ type IpResult struct {
 	Ip           string
 	Id           string
 	Organization string
+	Role         string
 	NetName      string
 	Description  string
 }
@@ -62,12 +63,16 @@ func QueryIp(ip string) *IpResult {
 			result.NetName = value
 		case "descr":
 			result.Description = value
+		case "role":
+			result.Role = value
 		case "address":
 			addresses = append(addresses, value)
 		}
 	}
 
-	if result.Organization == "" && len(addresses) > 0 {
+	if result.Organization == "" && result.Role != "" {
+		result.Organization = result.Role
+	} else if result.Organization == "" && len(addresses) > 0 {
 		result.Organization = addresses[0]
 	}
 	return result
