@@ -29,12 +29,16 @@ func QueryIp(ip string) *IpResult {
 	for _, line := range strings.Split(lines, "\n") {
 		if strings.HasPrefix(line, "%") ||
 			strings.HasPrefix(line, ";;") ||
-			strings.HasPrefix(line, "#") {
+			line == "" {
 			continue
 		}
 
-		if line == "" {
-			continue
+		// old arin changes to ripe etc
+		if strings.HasPrefix(line, "#") {
+			result.Organization = ""
+			result.Id = ""
+			result.NetName = ""
+			addresses = []string{}
 		}
 
 		parts := strings.SplitN(line, ":", 2)
