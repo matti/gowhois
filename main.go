@@ -14,6 +14,7 @@ type IpResult struct {
 	Role         string
 	NetName      string
 	Description  string
+	Address      string
 }
 
 func QueryIp(ip string) *IpResult {
@@ -77,6 +78,10 @@ func QueryIp(ip string) *IpResult {
 		result.Organization = descrs[0]
 	} else if result.Organization == "" && len(addresses) > 0 {
 		result.Organization = addresses[0]
+	}
+
+	if len(addresses) > 0 {
+		result.Address = addresses[0]
 	}
 	return result
 }
