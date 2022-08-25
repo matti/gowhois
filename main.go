@@ -12,6 +12,7 @@ type IpResult struct {
 	Id           string
 	Organization string
 	NetName      string
+	Description  string
 }
 
 func QueryIp(ip string) *IpResult {
@@ -32,33 +33,41 @@ func QueryIp(ip string) *IpResult {
 			line == "" {
 			continue
 		}
+		//log.Println(line)
 
 		// old arin changes to ripe etc
+		// but 8.8.8.8 has # end
 		if strings.HasPrefix(line, "#") {
-			result.Organization = ""
-			result.Id = ""
-			result.NetName = ""
 			addresses = []string{}
+			continue
 		}
 
 		parts := strings.SplitN(line, ":", 2)
+
+		//descr:          APNIC Research and Development
+		//                6 Cordelia St
+		if len(parts) != 2 {
+			continue
+		}
+
 		key := parts[0]
 		value := strings.TrimSpace(parts[1])
 
 		switch key {
 		case "org-name", "OrgName":
 			result.Organization = value
-		case "OrgId":
+		case "organisation", "OrgId":
 			result.Id = value
 		case "netname", "NetName":
 			result.NetName = value
+		case "descr":
+			result.Description = value
 		case "address":
 			addresses = append(addresses, value)
 		}
-
 	}
 
-	if result.Organization == "" {
+	if result.Organization == "" && len(addresses) > 0 {
 		result.Organization = addresses[0]
 	}
 	return result
