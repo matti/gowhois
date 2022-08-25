@@ -27,6 +27,7 @@ func QueryIp(ip string) *IpResult {
 	}
 
 	var addresses []string
+	var descrs []string
 
 	for _, line := range strings.Split(lines, "\n") {
 		if strings.HasPrefix(line, "%") ||
@@ -72,6 +73,8 @@ func QueryIp(ip string) *IpResult {
 
 	if result.Organization == "" && result.Role != "" {
 		result.Organization = result.Role
+	} else if result.Organization == "" && len(descrs) > 0 {
+		result.Organization = descrs[0]
 	} else if result.Organization == "" && len(addresses) > 0 {
 		result.Organization = addresses[0]
 	}
