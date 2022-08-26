@@ -64,7 +64,7 @@ func QueryIp(ip string) *IpResult {
 		case "netname", "NetName":
 			result.NetName = value
 		case "descr":
-			result.Description = value
+			descrs = append(descrs, value)
 		case "role":
 			result.Role = value
 		case "address":
@@ -82,6 +82,9 @@ func QueryIp(ip string) *IpResult {
 
 	if len(addresses) > 0 {
 		result.Address = addresses[0]
+	}
+	if len(descrs) > 0 {
+		result.Description = descrs[0]
 	}
 	return result
 }
